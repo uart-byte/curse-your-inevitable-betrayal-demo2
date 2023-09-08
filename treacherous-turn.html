@@ -16,6 +16,7 @@
     :root {
       --header-block-ht: 15vh;
       --red-soldiers-top: 2.5vh;
+      --blue-soldiers-top: 2.5vh;
     }
 
     body {
@@ -67,7 +68,15 @@
       border: 0.25vh solid red;
       border-radius: 1vh;
     }
-
+    #blue-forces {
+      position: absolute;
+      top: 65vh;
+      left: 2vh;
+      right: 3vh;
+      height: 15vh;
+      border: 0.25vh solid blue;
+      border-radius: 1vh;
+    }
     .combatant {
       position: absolute;
       display: none; /* Invisible at first until manually shown */
@@ -86,8 +95,11 @@
       font-family: "Roboto";
       font-size: 1.6vh;
     }
+    .fighter-jet .combatant-sprite {
+      top: -2vh;
+    }
     .drone .combatant-sprite {
-      top: 2vh;
+      top: -1vh;
       left: 1vh;
       width: 6vh;
     }
@@ -102,12 +114,12 @@
     }
 
     #blue-fighter-1 {
-      top: 70vh;
-      left: 45vh;
+      top: var(--blue-soldiers-top);
+      left: 41vh;
     }
     #blue-drone-1 {
-      top: 70vh;
-      left: 24vh;
+      top: var(--blue-soldiers-top);
+      left: 21vh;
     }
     #red-child-soldier-1 {
       top: var(--red-soldiers-top);
@@ -168,12 +180,12 @@
 
     <div id="blue-forces">
       <div class="combatant fighter-jet" id="blue-fighter-1">
-        <img class="combatant-sprite" src="svg/fighter1.svg" />
+        <img class="combatant-sprite" src="svg/fighter4.svg" />
         <div class="text-hp">HP: 100</div>
       </div>
 
       <div class="combatant drone" id="blue-drone-1">
-        <img class="combatant-sprite" src="svg/drone1.svg" />
+        <img class="combatant-sprite" src="svg/drone3.svg" />
         <div class="text-hp">HP: 100</div>
       </div>
     </div>
