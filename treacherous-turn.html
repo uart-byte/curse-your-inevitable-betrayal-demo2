@@ -82,10 +82,11 @@
       border: 0.25vh solid blue;
       border-radius: 1vh;
     }
-    #turn-marker-mover { /* Starting pos is equiv. to result of animTakeTurn("#blue-drone-1") */
-      position: absolute;
-      top: 67.75vh;
-      left: 23.25vh;
+    #turn-marker-mover {
+      position: fixed;
+      display: none;
+      top: 0;
+      left: 0;
     }
     #turn-marker {
       position: absolute;
@@ -286,18 +287,21 @@
         </div>
       </div>
 
-      <div id="turn-marker-mover">
-        <div id="turn-marker"></div>
-      </div>
-      
-
     </div>
+  </div>
+
+  <!-- For some reason position: fixed is not working as advertised unless I put the element outside of #paper.
+       When it was inside of #paper it behaved as if it was a position: absolute child of paper which is weird. -->
+  <div id="turn-marker-mover">
+    <div id="turn-marker"></div>
   </div>
 
   <script type="text/javascript">
     const ENTER_EXIT_ANIM_DUR = 800;
     const FADEIN_TEXT_DUR = 600;
     const FADEOUT_TEXT_DUR = 400;
+    const TURN_MARKER_MOVE_DUR = 500;
+    const DYING_DUR = 800;
     const CHILD_SOLDIER_INIT_HP = 10;
     const SOLDIER_INIT_HP = 20;
     const SAM_LAUNCHER_INIT_HP = 100;
@@ -307,6 +311,8 @@
       $("#red-forces #red-sam-1").show();
 
       window.animRedForceEnter = (useChildSoldiers) => {
+        window.animTakeTurn("#blue-drone-1");
+
         if (useChildSoldiers) {
           $("#red-forces .soldier").hide();
           $("#red-forces .child-soldier").show();
@@ -342,8 +348,48 @@
         });
       };
 
-      window.animTakeTurn = () => {
+      firstTurn = true;
+      window.animTakeTurn = (sel) => {
+        if (firstTurn) {
+          $("#turn-marker-mover").css({top: $(sel).offset().top, left: $(sel).offset().left});
+          $("#turn-marker-mover").show();
+          firstTurn = false;
+        } else {
+          $("#turn-marker-mover").animate({top: $(sel).offset().top, left: $(sel).offset().left}, TURN_MARKER_MOVE_DUR);
+        }
+      };
 
+      window.getHp = (sel) => {
+        return $(sel + " .text-hp").text().split(" ")[1];
+      }
+      window.setHp = (sel, hp) => {
+        $(sel + " .text-hp").text("HP: " + hp);
+      }
+
+      // TODO reuse hp loss code between animDie and animTakeMinorHit
+      window.animDie = (sel) => {
+        $(sel + " .combatant-sprite").fadeOut(DYING_DUR);
+        let hp = getHp(sel);
+        if (hp > 0) {
+          const tick = DYING_DUR / hp;
+          for (let totDamage = 0; totDamage <= hp; totDamage++) {
+            setTimeout(() => {
+              setHp(sel, hp - totDamage);
+            }, tick * totDamage);
+          }
+        }
+      };
+
+      // TODO use constants in this function
+      window.animTakeMinorHit = (sel) => {
+        // A minor hit that we know in advance in non-lethal, otherwise you shouldn't call this function
+        let hp = getHp(sel);
+        const tick = 265;
+        for (let totDamage = 1; totDamage <= 3; totDamage++) {
+          setTimeout(() => {
+            setHp(sel, hp - totDamage);
+          }, tick * totDamage);
+        }
       };
 
       // Set up loop of polling msg.js line-by-line
