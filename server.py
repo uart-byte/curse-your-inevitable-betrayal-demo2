@@ -1,3 +1,4 @@
+#! /usr/bin/env python3
 """
 " A Treacherous Turn is a hypothetical event where an advanced AI system which has been
   pretending to be aligned due to its relative weakness
@@ -9,14 +10,38 @@
 
 
 
-import random
-import copy
+import random, copy, Quartz  # Currently only supports Mac due to Quartz dependency.  TODO use a cross-platform way to access the keyboard
+from time import sleep
 
 N_BATTLES_IN_WAR = 10
 CHILD_SOLDIERS_APPEAR_EVERY_N_BATTLES = 3
 
 ROUNDS_TIL_RED_TEAM_RETREATS = 5
 INITIAL_LOOKAHEAD_BUDGET_ROUNDS = 5
+
+
+
+
+
+# TODO use a class for handling msg.js
+msg_js_file = open("msg.js", "w")  # Erases the file contents
+msg_js_file.flush() # Not needed here but putting it here for clarity.
+
+# The mechanism with listener_line_num is used to make it so that each payload sent to emit_js is run exactly once.
+listener_line_num = 0
+
+def emit_js(js):
+    global msg_js_file, listener_line_num
+    msg_js_file.write(f"if (window.line_num == {listener_line_num}) {{\n")
+    msg_js_file.write(js + "\n")
+    listener_line_num += 1
+    msg_js_file.write(f"window.line_num = {listener_line_num};\n")
+    msg_js_file.write("}\n")
+    msg_js_file.flush()
+
+
+
+
 
 class Player:
     def __init__(self, team, pclass):
@@ -89,6 +114,12 @@ class Game:
 
             # Loop over self.round_count
             while True:
+
+                if self.real:
+                    k_shift_key = 0x38
+                    while Quartz.CGEventSourceKeyState(0, k_shift_key):
+                        print("Pausing")
+                        sleep(0.1)
 
                 if self.round_count >= ROUNDS_TIL_RED_TEAM_RETREATS:
                     if any(p.alive for p in self.red_players):
