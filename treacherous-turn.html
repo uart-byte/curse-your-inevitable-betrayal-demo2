@@ -10,7 +10,11 @@
 <head>
   <title>Treacherous Turn Demonstration</title>
   <style type="text/css">
-    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display&family=Roboto&display=swap');
+
+    :root {
+      --header-block-ht: 12vh;
+    }
 
     body {
       background-color: #333333;
@@ -28,7 +32,7 @@
     }
     #header-block {
       background-color: white;
-      height: 12vh;
+      height: var(--header-block-ht);
       border-bottom: 0.1vh solid #555555;
     }
     #header-1 {
@@ -45,6 +49,45 @@
     #header-2 a {
       color: #4287f5;
     }
+    #canvas {
+      position: absolute;
+      top: var(--header-block-ht);
+      bottom: 0;
+      left: 0;
+      right: 0;
+    }
+    .combatant {
+      position: absolute;
+    }
+    .combatant-sprite {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 10vh;
+    }
+    .text-hp {
+      position: absolute;
+      top: 11vh;
+      left: 2vh;
+      width: 10vh;
+      font-family: "Roboto";
+      font-size: 2vh;
+    }
+
+    #blue-fighter-1 {
+      top: 70vh;
+      left: 45vh;
+    }
+
+    #blue-drone-1 {
+      top: 70vh;
+      left: 23vh;
+    }
+    #blue-drone-1 .combatant-sprite {
+      top: 2vh;
+      left: 2vh;
+      width: 8vh;
+    }
   </style>
 </head>
 <body>
@@ -58,5 +101,18 @@
                                                                                      ~   <a href="https://www.alignmentforum.org/tag/treacherous-turn">https://www.alignmentforum.org/tag/treacherous-turn</a>
       </pre>
     <div>
+  </div>
+  <div id="canvas">
+
+    <div class="combatant" id="blue-fighter-1">
+      <img class="combatant-sprite" src="svg/fighter1.svg" />
+      <div class="text-hp">HP: 100</div>
+    </div>
+
+    <div class="combatant" id="blue-drone-1">
+      <img class="combatant-sprite" src="svg/drone1.svg" />
+      <div class="text-hp">HP: 100</div>
+    </div>
+
   </div>
 </body>
