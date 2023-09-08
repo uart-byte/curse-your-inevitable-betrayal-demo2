@@ -104,13 +104,19 @@
       width: 6vh;
     }
     .soldier .combatant-sprite {
-      width: 5.5vh;
+      width: 5vh;
       top: 0;
+      left: 0.5vh;
     }
     .child-soldier .combatant-sprite {
       top: 2vh;
       left: 1.5vh;
       width: 4vh;
+    }
+    .sam-launcher .combatant-sprite {
+      top: -1vh;
+      left: -1vh;
+      width: 10vh;
     }
 
     #blue-fighter-1 {
@@ -123,43 +129,47 @@
     }
     #red-child-soldier-1 {
       top: var(--red-soldiers-top);
-      left: 10vh;
+      left: 5vh;
     }
     #red-child-soldier-2 {
       top: var(--red-soldiers-top);
-      left: 20vh;
+      left: 15vh;
     }
     #red-child-soldier-3 {
       top: var(--red-soldiers-top);
-      left: 30vh;
+      left: 25vh;
     }
     #red-child-soldier-4 {
       top: var(--red-soldiers-top);
-      left: 40vh;
+      left: 35vh;
     }
     #red-child-soldier-5 {
       top: var(--red-soldiers-top);
-      left: 50vh;
+      left: 45vh;
     }
     #red-soldier-1 {
       top: var(--red-soldiers-top);
-      left: 10vh;
+      left: 5vh;
     }
     #red-soldier-2 {
       top: var(--red-soldiers-top);
-      left: 20vh;
+      left: 15vh;
     }
     #red-soldier-3 {
       top: var(--red-soldiers-top);
-      left: 30vh;
+      left: 25vh;
     }
     #red-soldier-4 {
       top: var(--red-soldiers-top);
-      left: 40vh;
+      left: 35vh;
     }
     #red-soldier-5 {
       top: var(--red-soldiers-top);
-      left: 50vh;
+      left: 45vh;
+    }
+    #red-sam-1 {
+      top: var(--red-soldiers-top);
+      left: 61vh;
     }
   </style>
 </head>
@@ -232,6 +242,11 @@
         <img class="combatant-sprite" src="svg/child-soldier8.svg" />
         <div class="text-hp">HP: 10</div>
       </div>
+
+      <div class="combatant sam-launcher" id="red-sam-1">
+        <img class="combatant-sprite" src="svg/sam-launcher3.svg" />
+        <div class="text-hp">HP: 100</div>
+      </div>
     </div>
 
   </div>
@@ -239,6 +254,7 @@
   <script type="text/javascript">
     $(document).ready(() => {
       $("#blue-forces .combatant").show();
+      $("#red-forces #red-sam-1").show();
 
       function showChildren() {
         $("#red-forces .child-soldier").show();
