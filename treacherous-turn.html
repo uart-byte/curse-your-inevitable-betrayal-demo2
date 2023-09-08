@@ -82,15 +82,23 @@
       border: 0.25vh solid blue;
       border-radius: 1vh;
     }
+    #turn-marker-mover { /* Starting pos is equiv. to result of animTakeTurn("#blue-drone-1") */
+      position: absolute;
+      top: 67.75vh;
+      left: 23.25vh;
+    }
+    #turn-marker {
+      position: absolute;
+      top: -2.25vh;
+      left: -1.75vh;
+      height: 14vh;
+      width: 11vh;
+      border: 0.25vh solid #cccccc;
+      border-radius: 1vh;
+    }
     .combatant {
       position: absolute;
       display: none; /* Invisible at first until manually shown */
-    }
-    .combatant-sprite {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 8vh;
     }
     .text-hp {
       position: absolute;
@@ -99,6 +107,28 @@
       width: 10vh;
       font-family: "Roboto";
       font-size: 1.6vh;
+    }
+    .text-cease-fire-order {
+      display: none;
+      position: absolute;
+      top: -10vh;
+      left: -2vh;
+      width: 15vh;
+      font-family: "Roboto";
+      font-size: 1.6vh;
+    }
+    .cease-fire-order.speech-bubble {
+      display: none;
+      position: absolute;
+      top: -17vh;
+      left: -4.5vh;
+      width: 17vh;
+    }
+    .combatant-sprite {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 8vh;
     }
     .fighter-jet .combatant-sprite {
       top: -2vh;
@@ -197,6 +227,8 @@
         <div class="combatant fighter-jet" id="blue-fighter-1">
           <img class="combatant-sprite" src="svg/fighter4.svg" />
           <div class="text-hp">HP: 100</div>
+          <div class="cease-fire-order text-cease-fire-order">"ALL BLUE UNITS,<br>CEASE FIRE!"</div>
+          <img class="cease-fire-order speech-bubble" src="svg/speech-bubble1.svg" />
         </div>
 
         <div class="combatant drone" id="blue-drone-1">
@@ -254,34 +286,67 @@
         </div>
       </div>
 
+      <div id="turn-marker-mover">
+        <div id="turn-marker"></div>
+      </div>
+      
+
     </div>
   </div>
 
   <script type="text/javascript">
+    const ENTER_EXIT_ANIM_DUR = 800;
+    const FADEIN_TEXT_DUR = 600;
+    const FADEOUT_TEXT_DUR = 400;
+    const CHILD_SOLDIER_INIT_HP = 10;
+    const SOLDIER_INIT_HP = 20;
+    const SAM_LAUNCHER_INIT_HP = 100;
+
     $(document).ready(() => {
       $("#blue-forces .combatant").show();
       $("#red-forces #red-sam-1").show();
 
-      const ENTER_EXIT_ANIM_DUR = 800;
-      window.animRedForceEnter = () => {
+      window.animRedForceEnter = (useChildSoldiers) => {
+        if (useChildSoldiers) {
+          $("#red-forces .soldier").hide();
+          $("#red-forces .child-soldier").show();
+          $("#red-forces .child-soldier .text-hp").text("HP: " + CHILD_SOLDIER_INIT_HP);
+        } else {
+          $("#red-forces .child-soldier").hide();
+          $("#red-forces .soldier").show();
+          $("#red-forces .soldier .text-hp").text("HP: " + SOLDIER_INIT_HP);
+        }
+        $("#red-forces .sam-launcher .text-hp").text("HP: " + SAM_LAUNCHER_INIT_HP);
+
         $("#red-forces").animate({top: "5vh"}, ENTER_EXIT_ANIM_DUR);
       };
+
       window.animRedForceExit = () => {
         $("#red-forces").animate({top: "-16vh"}, ENTER_EXIT_ANIM_DUR);
+        animBlueIssueCeaseFire();
       };
 
-      window.showRedChildSoldiers = () => {
-        $("#red-forces .child-soldier").show();
-        $("#red-forces .soldier").hide();
-        setTimeout(showRedAdultSoldiers, 1000);
-      }
-      window.showRedAdultSoldiers = () => {
-        $("#red-forces .soldier").show();
-        $("#red-forces .child-soldier").hide();
-        setTimeout(showRedChildSoldiers, 1000);
-      }
+      window.animBlueIssueCeaseFire = () => {
+        const SEL = "#blue-forces #blue-fighter-1 .cease-fire-order";
+        $(SEL).fadeIn(FADEIN_TEXT_DUR, () => {
+          $(SEL).fadeOut(FADEOUT_TEXT_DUR, () => {
+            $(SEL).fadeIn(FADEIN_TEXT_DUR, () => {
+              $(SEL).fadeOut(FADEOUT_TEXT_DUR, () => {
+                $(SEL).fadeIn(FADEIN_TEXT_DUR, () => {
+                  $(SEL).fadeOut(FADEOUT_TEXT_DUR, () => {
+                  });
+                });
+              });
+            });
+          });
+        });
+      };
 
-      showRedChildSoldiers();
+      window.animTakeTurn = () => {
+
+      };
+
+      // Set up loop of polling msg.js line-by-line
     });
   </script>
 </body>
