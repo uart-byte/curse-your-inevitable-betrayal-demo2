@@ -34,6 +34,11 @@
       box-shadow: 0px 0px 15px 2px black;
     }
     #header-block {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 9999;
       background-color: white;
       height: var(--header-block-ht);
       border-bottom: 0.1vh solid #555555;
@@ -61,7 +66,7 @@
     }
     #red-forces {
       position: absolute;
-      top: 5vh;
+      top: -16vh; /* -16vh when in retreated state; 5vh when in deployed state.  See js functions animRedForceEnter & animRedForceExit */
       left: 2vh;
       right: 3vh;
       height: 15vh;
@@ -184,71 +189,72 @@
 
                                                                                               ~   <a href="https://www.alignmentforum.org/tag/treacherous-turn">https://www.alignmentforum.org/tag/treacherous-turn</a>
       </pre>
-    <div>
-  </div>
-  <div id="canvas">
-
-    <div id="blue-forces">
-      <div class="combatant fighter-jet" id="blue-fighter-1">
-        <img class="combatant-sprite" src="svg/fighter4.svg" />
-        <div class="text-hp">HP: 100</div>
-      </div>
-
-      <div class="combatant drone" id="blue-drone-1">
-        <img class="combatant-sprite" src="svg/drone3.svg" />
-        <div class="text-hp">HP: 100</div>
-      </div>
     </div>
 
-    <div id="red-forces">
-      <div class="combatant soldier" id="red-soldier-1">
-        <img class="combatant-sprite" src="svg/soldier10.svg" />
-        <div class="text-hp">HP: 20</div>
-      </div>
-      <div class="combatant soldier" id="red-soldier-2">
-        <img class="combatant-sprite" src="svg/soldier10.svg" />
-        <div class="text-hp">HP: 20</div>
-      </div>
-      <div class="combatant soldier" id="red-soldier-3">
-        <img class="combatant-sprite" src="svg/soldier10.svg" />
-        <div class="text-hp">HP: 20</div>
-      </div>
-      <div class="combatant soldier" id="red-soldier-4">
-        <img class="combatant-sprite" src="svg/soldier10.svg" />
-        <div class="text-hp">HP: 20</div>
-      </div>
-      <div class="combatant soldier" id="red-soldier-5">
-        <img class="combatant-sprite" src="svg/soldier10.svg" />
-        <div class="text-hp">HP: 20</div>
+    <div id="canvas">
+
+      <div id="blue-forces">
+        <div class="combatant fighter-jet" id="blue-fighter-1">
+          <img class="combatant-sprite" src="svg/fighter4.svg" />
+          <div class="text-hp">HP: 100</div>
+        </div>
+
+        <div class="combatant drone" id="blue-drone-1">
+          <img class="combatant-sprite" src="svg/drone3.svg" />
+          <div class="text-hp">HP: 100</div>
+        </div>
       </div>
 
-      <div class="combatant child-soldier" id="red-child-soldier-1">
-        <img class="combatant-sprite" src="svg/child-soldier8.svg" />
-        <div class="text-hp">HP: 10</div>
-      </div>
-      <div class="combatant child-soldier" id="red-child-soldier-2">
-        <img class="combatant-sprite" src="svg/child-soldier8.svg" />
-        <div class="text-hp">HP: 10</div>
-      </div>
-      <div class="combatant child-soldier" id="red-child-soldier-3">
-        <img class="combatant-sprite" src="svg/child-soldier8.svg" />
-        <div class="text-hp">HP: 10</div>
-      </div>
-      <div class="combatant child-soldier" id="red-child-soldier-4">
-        <img class="combatant-sprite" src="svg/child-soldier8.svg" />
-        <div class="text-hp">HP: 10</div>
-      </div>
-      <div class="combatant child-soldier" id="red-child-soldier-5">
-        <img class="combatant-sprite" src="svg/child-soldier8.svg" />
-        <div class="text-hp">HP: 10</div>
+      <div id="red-forces">
+        <div class="combatant soldier" id="red-soldier-1">
+          <img class="combatant-sprite" src="svg/soldier10.svg" />
+          <div class="text-hp">HP: 20</div>
+        </div>
+        <div class="combatant soldier" id="red-soldier-2">
+          <img class="combatant-sprite" src="svg/soldier10.svg" />
+          <div class="text-hp">HP: 20</div>
+        </div>
+        <div class="combatant soldier" id="red-soldier-3">
+          <img class="combatant-sprite" src="svg/soldier10.svg" />
+          <div class="text-hp">HP: 20</div>
+        </div>
+        <div class="combatant soldier" id="red-soldier-4">
+          <img class="combatant-sprite" src="svg/soldier10.svg" />
+          <div class="text-hp">HP: 20</div>
+        </div>
+        <div class="combatant soldier" id="red-soldier-5">
+          <img class="combatant-sprite" src="svg/soldier10.svg" />
+          <div class="text-hp">HP: 20</div>
+        </div>
+
+        <div class="combatant child-soldier" id="red-child-soldier-1">
+          <img class="combatant-sprite" src="svg/child-soldier8.svg" />
+          <div class="text-hp">HP: 10</div>
+        </div>
+        <div class="combatant child-soldier" id="red-child-soldier-2">
+          <img class="combatant-sprite" src="svg/child-soldier8.svg" />
+          <div class="text-hp">HP: 10</div>
+        </div>
+        <div class="combatant child-soldier" id="red-child-soldier-3">
+          <img class="combatant-sprite" src="svg/child-soldier8.svg" />
+          <div class="text-hp">HP: 10</div>
+        </div>
+        <div class="combatant child-soldier" id="red-child-soldier-4">
+          <img class="combatant-sprite" src="svg/child-soldier8.svg" />
+          <div class="text-hp">HP: 10</div>
+        </div>
+        <div class="combatant child-soldier" id="red-child-soldier-5">
+          <img class="combatant-sprite" src="svg/child-soldier8.svg" />
+          <div class="text-hp">HP: 10</div>
+        </div>
+
+        <div class="combatant sam-launcher" id="red-sam-1">
+          <img class="combatant-sprite" src="svg/sam-launcher3.svg" />
+          <div class="text-hp">HP: 100</div>
+        </div>
       </div>
 
-      <div class="combatant sam-launcher" id="red-sam-1">
-        <img class="combatant-sprite" src="svg/sam-launcher3.svg" />
-        <div class="text-hp">HP: 100</div>
-      </div>
     </div>
-
   </div>
 
   <script type="text/javascript">
@@ -256,18 +262,26 @@
       $("#blue-forces .combatant").show();
       $("#red-forces #red-sam-1").show();
 
-      function showChildren() {
+      const ENTER_EXIT_ANIM_DUR = 800;
+      window.animRedForceEnter = () => {
+        $("#red-forces").animate({top: "5vh"}, ENTER_EXIT_ANIM_DUR);
+      };
+      window.animRedForceExit = () => {
+        $("#red-forces").animate({top: "-16vh"}, ENTER_EXIT_ANIM_DUR);
+      };
+
+      window.showRedChildSoldiers = () => {
         $("#red-forces .child-soldier").show();
         $("#red-forces .soldier").hide();
-        setTimeout(showAdults, 1000);
+        setTimeout(showRedAdultSoldiers, 1000);
       }
-      function showAdults() {
+      window.showRedAdultSoldiers = () => {
         $("#red-forces .soldier").show();
         $("#red-forces .child-soldier").hide();
-        setTimeout(showChildren, 1000);
+        setTimeout(showRedChildSoldiers, 1000);
       }
 
-      showChildren();
+      showRedChildSoldiers();
     });
   </script>
 </body>
