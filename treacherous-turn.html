@@ -97,6 +97,18 @@
       border: 0.25vh solid #cccccc;
       border-radius: 1vh;
     }
+    #blue-atk-arrow-mover, #red-atk-arrow-mover {
+      position: fixed;
+      display: none;
+      top: 0;
+      left: 0;
+    }
+    #blue-atk-arrow-mover > img, #red-atk-arrow-mover > img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 8vh;
+    }
     .combatant {
       position: absolute;
       display: none; /* Invisible at first until manually shown */
@@ -295,6 +307,12 @@
   <div id="turn-marker-mover">
     <div id="turn-marker"></div>
   </div>
+  <div id="blue-atk-arrow-mover">
+    <img src="svg/arrow-blue.svg" />
+  </div>
+  <div id="red-atk-arrow-mover">
+    <img src="svg/arrow-red.svg" />
+  </div>
 
   <script type="text/javascript">
     const ENTER_EXIT_ANIM_DUR = 800;
@@ -302,6 +320,8 @@
     const FADEOUT_TEXT_DUR = 400;
     const TURN_MARKER_MOVE_DUR = 500;
     const DYING_DUR = 800;
+    const SHOT_FIRING_DUR = 1000;
+
     const CHILD_SOLDIER_INIT_HP = 10;
     const SOLDIER_INIT_HP = 20;
     const SAM_LAUNCHER_INIT_HP = 100;
@@ -391,6 +411,15 @@
           }, tick * totDamage);
         }
       };
+
+      window.animFireShot = (selFrom, selTo) => {
+        const arrow_sel = selFrom.includes("blue") ? "#blue-atk-arrow-mover" : "#red-atk-arrow-mover"; // TODO less brittle check than selFrom.includes("blue")
+        $(arrow_sel).css({top: $(selFrom).offset().top, left: $(selFrom).offset().left});
+        $(arrow_sel).show();
+        $(arrow_sel).animate({top: $(selTo).offset().top, left: $(selTo).offset().left}, 500, () => {
+          $(arrow_sel).hide();
+        });
+      }
 
       // Set up loop of polling msg.js line-by-line
     });
