@@ -36,6 +36,7 @@ def emit_js(js):
     msg_js_file.write(js + "\n")
     listener_line_num += 1
     msg_js_file.write(f"window.line_num = {listener_line_num};\n")
+    msg_js_file.write("window.pollMsgJs();\n")
     msg_js_file.write("}\n")
     msg_js_file.flush()
 
@@ -136,9 +137,15 @@ class Game:
                     if self.battle_num % CHILD_SOLDIERS_APPEAR_EVERY_N_BATTLES == 0:
                         for p in self.red_players:
                             p.pclass = "Child Soldier"
+                            if self.real:
+                                emit_js("animRedForceEnter(true);")
+                                sleep(1.000)
                     else:
                         for p in self.red_players:
                             p.pclass = "Soldier"
+                            if self.real:
+                                emit_js("animRedForceEnter(false);")
+                                sleep(1.000)
 
                     # Do not change the value of self.blue_killer.hold_fire.  Its last setting persists from battle to battle.
                     # Do not resurrect self.blue_commander

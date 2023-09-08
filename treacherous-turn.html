@@ -424,6 +424,16 @@
       }
 
       // Set up loop of polling msg.js line-by-line
+      window.line_num = 0;
+      let i_for_msg_js_cachebuster = 0;
+      window.pollMsgJs = () => {
+        const msg_js_cachebuster = "?nocache=" + new Date().getTime() + "i" + i_for_msg_js_cachebuster;
+        $.get("msg.js" + msg_js_cachebuster, (code) => {
+          console.log(code);
+          eval(code);
+        })
+      };
+      pollMsgJs();
     });
   </script>
 </body>
