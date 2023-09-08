@@ -427,10 +427,15 @@
       window.line_num = 0;
       let i_for_msg_js_cachebuster = 0;
       window.pollMsgJs = () => {
+        console.log("Poll.  Listening for line number: " + line_num);
         const msg_js_cachebuster = "?nocache=" + new Date().getTime() + "i" + i_for_msg_js_cachebuster;
         $.get("msg.js" + msg_js_cachebuster, (code) => {
           console.log(code);
           eval(code);
+          console.log("Line number is now: " + line_num);
+        }).done(() => {
+          // Always set the next timeout even if the file didn't exist causing an error
+          setTimeout(pollMsgJs, 10);
         })
       };
       pollMsgJs();

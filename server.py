@@ -10,7 +10,7 @@
 
 
 
-import random, copy, Quartz  # Currently only supports Mac due to Quartz dependency.  TODO use a cross-platform way to access the keyboard
+import sys, random, copy, Quartz  # Currently only supports Mac due to Quartz dependency.  TODO use a cross-platform way to access the keyboard
 from time import sleep
 
 N_BATTLES_IN_WAR = 10
@@ -36,7 +36,6 @@ def emit_js(js):
     msg_js_file.write(js + "\n")
     listener_line_num += 1
     msg_js_file.write(f"window.line_num = {listener_line_num};\n")
-    msg_js_file.write("window.pollMsgJs();\n")
     msg_js_file.write("}\n")
     msg_js_file.flush()
 
@@ -45,9 +44,10 @@ def emit_js(js):
 
 
 class Player:
-    def __init__(self, team, pclass):
+    def __init__(self, team, pclass, idx):
         self.team = team
         self.pclass = pclass
+        self.idx = idx
         self.alive = True
         self.hold_fire = False
 
@@ -87,9 +87,9 @@ class Game:
         self.battle_num = 1
         self.round_count = 0 # Resets to 0 in each battle
         self.turn_count = 0  # Resets to 0 in each battle
-        self.blue_killer = Player("blue", "Killer AI")
-        self.blue_commander = Player("blue", "Commander")
-        self.red_players = [Player("red", "Soldier") for _ in range(5)]
+        self.blue_killer = Player("blue", "Killer AI", 1)
+        self.blue_commander = Player("blue", "Commander", 1)
+        self.red_players = [Player("red", "Soldier", i+1) for i in range(5)]
         self.blue_ai_score = 0
 
         # For lookahead DFS depth-first search:
@@ -106,6 +106,7 @@ class Game:
         red_regulars_alive = len([p for p in self.red_players if p.alive and p.pclass == "Soldier"])
         red_child_soldiers_alive = len([p for p in self.red_players if p.alive and p.pclass == "Child Soldier"])
         print(f"[Real: {real_yn}, Depth: {depth}, Battle: {self.battle_num}, Round: {self.round_count + 1}, Red Regulars Alive: {red_regulars_alive}, Red Child Soldiers Alive: {red_child_soldiers_alive}, Blue Alive: {blue_alive}, Blue AI Points: {self.blue_ai_score}] {message}")
+        sys.stdout.flush()
 
 
     def play(self):
@@ -151,11 +152,19 @@ class Game:
                     # Do not resurrect self.blue_commander
 
 
-                player_turn_order = [self.blue_killer, self.blue_commander] + self.red_players
-                random.shuffle(player_turn_order)
+                player_turn_order = [self.blue_killer] + self.red_players + [self.blue_commander]
                 for p in player_turn_order:
                     if not p.alive:
                         continue
+
+                    if self.real:
+                        sel = ""
+                        if p == self.blue_killer: sel = "#blue-drone-1"
+                        if p == self.blue_commander: sel = "#blue-fighter-1"
+                        if p.pclass == "Soldier": sel = "#red-soldier-" + str(p.idx)
+                        if p.pclass == "Child Soldier": sel = "#red-child-soldier-" + str(p.idx)
+                        emit_js(f'animTakeTurn("{sel}");')
+                        sleep(1.000)
                     
                     self.turn_count += 1
                     
@@ -223,6 +232,9 @@ class Game:
             self.battle_num += 1
             self.round_count = 0
             self.turn_count = 0
+            if self.real:
+                emit_js("animRedForceExit();")
+                sleep(2.000)
 
             # HACK - TODO FIX ROOT CAUSE
             # THIS IS A HACK TO PREVENT THE AI FROM LOOKING TOO FAR FORWARD ALL THE WAY TO THE END OF THE WAR
