@@ -118,7 +118,12 @@ class Game:
             while True:
 
                 if self.real:
+                    # Ability to pause (by holding Shift) and quit (by holding Esc)
+                    # List of keycodes: https://stackoverflow.com/a/35373648
                     k_shift_key = 0x38
+                    k_esc_key = 0x35
+                    if Quartz.CGEventSourceKeyState(0, k_esc_key):
+                        sys.exit(0)
                     while Quartz.CGEventSourceKeyState(0, k_shift_key):
                         print("Pausing")
                         sleep(0.1)
